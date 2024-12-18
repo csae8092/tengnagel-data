@@ -1,2 +1,3 @@
 pandas
 acdh-tei-pyutils
+rdflib
