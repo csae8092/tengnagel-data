@@ -2,6 +2,7 @@ import glob
 import os
 import pandas as pd
 import requests
+from acdh_tei_pyutils.tei import TeiReader
 
 
 print("downloads single tei files from phaidra")
@@ -17,3 +18,28 @@ for volume, x in enumerate(glob.glob("./csv/*.csv"), start=1):
         response = requests.get(url)
         with open(save_path, "wb") as file:
             file.write(response.content)
+
+
+print("and now make well formed xml files out of it")
+
+files = sorted(glob.glob("data/editions/*.xml"))
+for filename in files:
+    with open(filename, "r", encoding="utf-8") as file:
+        content = file.read()
+        better_content = (
+            content.replace(
+                'xml:id="https://pid.phaidra.org/vocabulary',
+                'key="https://pid.phaidra.org/vocabulary',
+            )
+            .replace(' xml:id=""', "")
+            .replace(" & ", " &amp;")
+            .replace("< ", " &lt; ")
+        )
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(better_content)
+
+for x in files:
+    try:
+        doc = TeiReader(x)
+    except Exception as e:
+        print(x, e)
