@@ -20,7 +20,7 @@ for subject, predicate, object in tqdm(collection_graph.triples((None, None, Non
     except Exception as e:
         print(uri, e)
         continue
-    item = {"ids": [], "label": ""}
+    item = {"ids": [], "label": "", "phaidra": uri.replace(".ttl", "")}
     for s, p, o in g.triples((None, None, None)):
         if str(p) == "http://www.w3.org/2004/02/skos/core#prefLabel":
             item["label"] = str(o)
@@ -104,4 +104,7 @@ for i, row in df.iterrows():
         idno.attrib["type"] = type
         idno.text = x
         person.append(idno)
+    idno = ET.Element("{http://www.tei-c.org/ns/1.0}idno")
+    idno.attrib["type"] = "phaidra"
+    idno.text = row["phaidra"]
 doc.tree_to_file(os.path.join("data", "indices", "listperson.xml"))
