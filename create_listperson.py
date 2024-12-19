@@ -107,4 +107,5 @@ for i, row in df.iterrows():
     idno = ET.Element("{http://www.tei-c.org/ns/1.0}idno")
     idno.attrib["type"] = "phaidra"
     idno.text = row["phaidra"]
+    person.append(idno)
 doc.tree_to_file(os.path.join("data", "indices", "listperson.xml"))
